@@ -1,9 +1,6 @@
 <?php
 
-namespace Database\Seeders;
-use Psy\Util\Str;
-use function random_int;
-
+use App\Models\News;
 use Illuminate\Database\Seeder;
 
 class NewsSeeder extends Seeder
@@ -16,7 +13,7 @@ class NewsSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\News::query()->delete();
-        \App\Models\News::factory(random_int(15, 25))->create();
+        News::query()->delete();
+        News::factory(random_int(15, 25))->create();
     }
 }
