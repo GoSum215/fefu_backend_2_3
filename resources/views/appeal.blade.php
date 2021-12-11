@@ -16,6 +16,7 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
+                margin: 10px;
             }
 
             .bordered {
@@ -28,32 +29,45 @@
         @if ($success)
             <p>Успешно</p>
         @endif
+        @foreach($errors->all() as $error)
+            {{ $error }}
+        @endforeach
         <form method="POST" action="{{ route('appeal') }}" class="bordered">
             @csrf
             <div>
-                <label>Name</label>
-                <input name="name" type="text" value="{{ request()->isMethod('POST') ? old('name') : '' }}" maxlength="20" size="20" />
-                @if (isset($errors['name']))
-                    <p>{{ $errors['name'] }}</p>
-                @endif
+                <label>Surname</label>
+                <input name="surname" type="text" value="{{ request()->isMethod('POST') ? old('surname') : '' }}"/>
             </div>
             <div>
-                <label>Message</label>
-                <textarea name="message" value="{{ request()->isMethod('POST') ? old('message') : '' }}" maxlength="100" rows="7"></textarea>
-                @if (isset($errors['message']))
-                    <p>{{ $errors['message'] }}</p>
-                @endif
+                <label>Name</label>
+                <input name="name" type="text" value="{{ request()->isMethod('POST') ? old('name') : '' }}"/>
             </div>
+            <div>
+                <label>Patronymic</label>
+                <input name="patronymic" type="text" value="{{ request()->isMethod('POST') ? old('patronymic') : '' }}"/>
+            </div>
+            <div>
+                <label>Age</label>
+                <input name="age" type="text" value="{{ request()->isMethod('POST') ? old('age') : '' }}"/>
+            </div>
+            <div>
+                <label>Gender</label>
+                <select name="gender">
+                    <option value=0 {{ request()->isMethod('POST') && old('gender') === 0 ? 'selected="selected"' : '' }}>Male</option>
+                    <option value=1 {{ request()->isMethod('POST') && old('gender') === 1 ? 'selected="selected"' : '' }}>Female</option>
+                </select>
             <div>
                 <label>Phone</label>
-                <input name="phone" type="text" value="{{ request()->isMethod('post') ? old('phone') : '' }}" maxlength="11" size="20">
+                <input name="phone" type="text" value="{{ request()->isMethod('post') ? old('phone') : '' }}">
             </div>
             <div>
                 <label>E-mail</label>
-                <input name="email" type="text" value="{{ request()->isMethod('post') ? old('email') : '' }}" maxlength="100" size="30">
-                @if (isset($errors['email']))
-                    <p>{{ $errors['email'] }}</p>
-                @endif
+                <input name="email" type="text" value="{{ request()->isMethod('post') ? old('email') : '' }}">
+            </div>
+            </div>
+            <div>
+                <label>Message</label>
+                <textarea name="message" value="{{ request()->isMethod('POST') ? old('message') : '' }}" rows="7"></textarea>
             </div>
             <input type="submit" name="Отправить">
         </form>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appeal;
+use App\Sanitizers\DigitsOnlySanitizer;
 use Illuminate\Http\Request;
 use function Symfony\Component\String\s;
+use App\Http\Requests\AppealRequest;
 
 class AppealController extends Controller
 {
@@ -16,36 +18,29 @@ class AppealController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $errors = [];
+        //$errors = [];
         $success = $request->session()->get('success', false);
 
-        if ($request->isMethod('POST')) {
-            $name = $request->input('name');
-            $message = $request->input('message');
-            $phone = $request->input('phone');
-            $email = $request->input('email');
+        if ($request->isMethod('POST'))
+        {
+            $validated = $request->validate(
+                AppealRequest::rules()
+            );
 
-            if ($name === null) {
-                $errors['name'] = 'Name is empty';
-            }
-            if ($message === null) {
-                $errors['message'] = 'Message is empty';
-            }
-            if ($phone === null && $email === null) {
+            if ($validated['phone'] === null && $validated['email'] === null) {
                 $errors['email'] = 'Phone and E-mail is empty';
-            }
-
-            if (count($errors) > 0) {
-                $request->flash();
             }
             else {
                 $appeal = new Appeal();
-                $appeal->name = $name;
-                $appeal->message = $message;
-                $appeal->phone = $phone;
-                $appeal->email = $email;
+                $appeal->surname = $validated['surname'];
+                $appeal->name = $validated['name'];
+                $appeal->patronymic = $validated['patronymic'];
+                $appeal->age = $validated['age'];
+                $appeal->gender = $validated['gender'];
+                $appeal->phone = DigitsOnlySanitizer::sanitize($validated['phone']);
+                $appeal->email = $validated['email'];
+                $appeal->message = $validated['message'];
                 $appeal->save();
-
                 $success = true;
 
                 return redirect()
@@ -53,7 +48,6 @@ class AppealController extends Controller
                     ->with('success', $success);
             }
         }
-
-        return view('appeal', ['errors' => $errors, 'success' => $success]);
+        return view('appeal', ['success' => $success]);
     }
 }
