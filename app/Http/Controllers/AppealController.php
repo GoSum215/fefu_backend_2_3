@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use function Symfony\Component\String\s;
 use App\Http\Requests\AppealRequest;
 
+
 class AppealController extends Controller
 {
     /**
@@ -18,6 +19,7 @@ class AppealController extends Controller
      */
     public function __invoke(Request $request)
     {
+
         //$errors = [];
         $success = $request->session()->get('success', false);
 

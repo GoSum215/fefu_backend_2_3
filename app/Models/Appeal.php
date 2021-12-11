@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 /**
  * @property string $surname
  * @property string $name
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property string $message
 */
+
 
 class Appeal extends Model
 {

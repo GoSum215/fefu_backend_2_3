@@ -16,7 +16,6 @@
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
-                margin: 10px;
             }
 
             .bordered {
