@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appeal;
+use App\Sanitizers\PhoneSanitize;
 use Illuminate\Http\Request;
 use function Symfony\Component\String\s;
+use App\Http\Requests\AppealRequest;
 
 class AppealController extends Controller
 {
@@ -14,46 +16,29 @@ class AppealController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request)
+    public function create()
     {
-        $errors = [];
-        $success = $request->session()->get('success', false);
+        return view('appeal');
+    }
+    public function save(AppealRequest $request)
+    {
+        $validated = $request->validate(
+            AppealRequest::rules()
+        );
 
-        if ($request->isMethod('POST')) {
-            $name = $request->input('name');
-            $message = $request->input('message');
-            $phone = $request->input('phone');
-            $email = $request->input('email');
+        $appeal = new Appeal();
+        $appeal->surname = $validated['surname'];
+        $appeal->name = $validated['name'];
+        $appeal->patronymic = $validated['patronymic'];
+        $appeal->age = $validated['age'];
+        $appeal->gender = $validated['gender'];
+        $appeal->phone = PhoneSanitize::sanitize($validated['phone']);
+        $appeal->email = $validated['email'];
+        $appeal->message = $validated['message'];
+        $appeal->save();
 
-            if ($name === null) {
-                $errors['name'] = 'Name is empty';
-            }
-            if ($message === null) {
-                $errors['message'] = 'Message is empty';
-            }
-            if ($phone === null && $email === null) {
-                $errors['email'] = 'Phone and E-mail is empty';
-            }
-
-            if (count($errors) > 0) {
-                $request->flash();
-            }
-            else {
-                $appeal = new Appeal();
-                $appeal->name = $name;
-                $appeal->message = $message;
-                $appeal->phone = $phone;
-                $appeal->email = $email;
-                $appeal->save();
-
-                $success = true;
-
-                return redirect()
-                    ->route('appeal')
-                    ->with('success', $success);
-            }
-        }
-
-        return view('appeal', ['errors' => $errors, 'success' => $success]);
+        return redirect()
+            ->route('appeal')
+            ->with('success', 'Appeal created');
     }
 }
