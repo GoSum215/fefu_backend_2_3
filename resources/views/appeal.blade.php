@@ -31,6 +31,10 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if ($showMessage === true)
+            <p>Ваш отзыв очень важен для нас</p>
+            <a href="{{url()->previous()}}">Вернуться</a>
+        @endif
         @foreach($errors->all() as $error)
             {{ $error }}
         @endforeach
@@ -58,6 +62,7 @@
                     <option value=0 {{ old('gender') === 0 ? 'selected="selected"' : '' }}>Male</option>
                     <option value=1 {{ old('gender') === 1 ? 'selected="selected"' : '' }}>Female</option>
                 </select>
+            </div>
             <div>
                 <label>Message</label>
                 <textarea name="message" maxlength="100" rows="7"></textarea>
