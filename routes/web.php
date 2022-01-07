@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\RegistrationController;
 use \App\Http\Controllers\AppealController;
+use App\Http\Controllers\WebLoginController;
+use App\Http\Controllers\WebLogoutController;
+use App\Http\Controllers\WebProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\SuggestAppeal;
 
@@ -31,3 +36,12 @@ Route::get('/appeal', [AppealController::class, 'create'])
 Route::post('/appeal/save', [AppealController::class, 'save'])
     ->name('save_appeal')
     ->withoutMiddleware([SuggestAppeal::class]);
+
+Route::match(['get', 'post'], '/registration', RegistrationController::class)->name('registration');
+
+Route::match(['get', 'post'], '/login', WebLoginController::class)->name('login');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/logout', WebLogoutController::class)->name('logout');
+    Route::get('/profile', WebProfileController::class)->name('profile');
+});
