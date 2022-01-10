@@ -60,7 +60,7 @@ class CommentController extends Controller
      */
     public function show(Post $post, Comment $comment) : JsonResponse
     {
-        return response()->json(new PostResource($post));
+        return response()->json(new CommentResource($comment));
     }
 
     /**
@@ -73,7 +73,7 @@ class CommentController extends Controller
     public function update(Post $post, Request $request, Comment $comment) : JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'text' => 'sometimes|required|max:250'
+            'text' => 'required|max:250'
         ]);
 
         if ($validator->fails()) {
